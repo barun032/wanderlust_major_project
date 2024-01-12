@@ -99,14 +99,14 @@ app.get("/listings/search/:dest", async (req, res, next) => {
 })
 
 //------------All the routes-------------
+app.use("/listings", listingsRoute);
+app.use("/listings/:id/reviews", reviewsRoute); // mergeParams: -> to access listings id inside review 
+app.use("/", userRoute);
 // root route
 app.use("/", wrapAsync(async(req, res)=>{ 
     const listings = await Listing.find();
     res.render("./listings/index.ejs", { listings });
 }))
-app.use("/listings", listingsRoute);
-app.use("/listings/:id/reviews", reviewsRoute); // mergeParams: -> to access listings id inside review 
-app.use("/", userRoute);
 
 
 app.all('*', (req, res, next) => {
