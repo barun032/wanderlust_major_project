@@ -102,17 +102,6 @@ app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute); // mergeParams: -> to access listings id inside review 
 app.use("/", userRoute);
 
-
-// app.get("/demouser", async(req, res)=>{
-//     let fakeUser = new User({
-//         email: "barun@gmail.com",
-//         username: "barunmandal"
-//     });
-
-//     let registerdUser = await User.register(fakeUser, "helloworld"); // 1st parameter is user and 2nd one is user's password
-//     console.log(registerdUser);
-// })
-
 app.all('*', (req, res, next) => {
     next(new ExpressError(404, "Page not found!"));
 })
