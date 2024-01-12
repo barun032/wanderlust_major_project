@@ -37,7 +37,7 @@ async function main() {
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
-        secret: 'tuniismysecretcode'
+        secret: process.env.SECRET,
     },
     touchAfter: 24 * 3600
 });
@@ -48,7 +48,7 @@ store.on("error", (err)=>{
 
 const sessionOption = {
     store,
-    secret: 'tuinismysecredcode',
+    secret: process.env.SECRET,
     saveUninitialized: true,
     resave: false,
     cookie: {
