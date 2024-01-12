@@ -38,38 +38,10 @@ router.route("/:id")
         isOwner,
         wrapAsync(listingControler.destroyListing));
 
-
-// router.post("/", 
-// isLoggedIn, 
-// validateListing, 
-// wrapAsync(listingControler.createNewListing));
-
-// ---------Show Route--------
-// router.get("/:id",
-//     wrapAsync(listingControler.showListing));
-
-
 //-----------Edit Route--------------
 router.get("/:id/edit",
     isLoggedIn,
     isOwner,
     wrapAsync(listingControler.renderEditForm));
-
-
-
-//------------Update Route---------
-// router.put("/:id",
-// isLoggedIn,
-//     isOwner,
-//     validateListing,
-//     wrapAsync(listingControler.updateListing)
-//     );
-
-
-//---------Delete Route-----------
-// router.delete("/:id",
-//     isLoggedIn,
-//     isOwner,
-//     wrapAsync(listingControler.destroyListing));
 
 module.exports = router;

@@ -2,27 +2,27 @@ if (process.env.NODE_ENV != "production") {
     require("dotenv").config()
 }
 
-const express = require('express'); // npm package
+const express = require('express'); 
 const app = express();
-const mongoose = require('mongoose'); // npm package
+const mongoose = require('mongoose'); 
 const path = require('path');
-const methodOverride = require('method-override'); // npm package
+const methodOverride = require('method-override'); 
 const ExpressError = require('./utils/ExpressError.js');
 const listingsRoute = require("./routes/listing.js");
 const reviewsRoute = require("./routes/review.js");
 const userRoute = require("./routes/user.js");
-const session = require("express-session"); // npm package
+const session = require("express-session"); 
 const MongoStore = require('connect-mongo');
-const flash = require("connect-flash"); // npm package
-const passport = require("passport"); // npm package
-const LocalStrategy = require("passport-local"); // npm package
+const flash = require("connect-flash"); 
+const passport = require("passport"); 
+const LocalStrategy = require("passport-local"); 
 const User = require("./models/user.js");
 
 const Listing = require("./models/listing.js");
 
 // -----------------For database connetions-------------------
 // const mongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
-const dbUrl = process.env.ATLASDB_URL;
+const mongo = process.env.ATLASDB_URL;
 
 main().then(() => {
     console.log("connected to DB");
@@ -30,12 +30,12 @@ main().then(() => {
     .catch(err => console.log(err));
 
 async function main() {
-    await mongoose.connect(dbUrl);
+    await mongoose.connect(mongo);
 }
 
-//----------varibale for session ---------------
+// ----------varibale for session ---------------
 const store = MongoStore.create({
-    mongoUrl: dbUrl,
+    mongoUrl: mongo,
     crypto: {
         secret: process.env.SECRET,
     },
@@ -59,9 +59,9 @@ const sessionOption = {
 };
 
 
-
 //--------------For reuse templateing(like navBar and footer)------------------
 const ejsMate = require('ejs-mate');
+const wrapAsync = require("./utils/wrapAsync.js");
 app.engine('ejs', ejsMate);
 
 const port = 8080;
@@ -97,10 +97,17 @@ app.get("/listings/search/:dest", async (req, res, next) => {
     console.log(search);
     res.send("listing");
 })
+
 //------------All the routes-------------
+// root route
+app.use("/", wrapAsync(async(req, res)=>{ 
+    const listings = await Listing.find();
+    res.render("./listings/index.ejs", { listings });
+}))
 app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute); // mergeParams: -> to access listings id inside review 
 app.use("/", userRoute);
+
 
 app.all('*', (req, res, next) => {
     next(new ExpressError(404, "Page not found!"));
